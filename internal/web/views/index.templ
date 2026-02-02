@@ -1,0 +1,93 @@
+package views
+
+import "dbspigot/internal/docker"
+
+templ Index(databases []docker.Database) {
+	@Base("DBSpigot") {
+		<header class="topbar">
+			<div class="brand">
+				<div class="logo">db</div>
+				<span>spigot</span>
+			</div>
+		</header>
+
+		<section class="hero">
+			<div>
+				<div class="eyebrow">Self Hosted Instant Postgres</div>
+				<h1>Zero-config Postgres for quick iteration</h1>
+				<p>Spin up disposable PostgreSQL instances in seconds.</p>
+				<div class="hero-actions">
+					<form method="POST" action="/create">
+						<button type="submit" class="btn btn-primary">Create Database</button>
+					</form>
+				</div>
+			</div>
+			<div class="terminal">
+				<div class="terminal-head">
+					<span class="terminal-icon">›_</span>
+					<div class="terminal-tabs">
+						<span class="terminal-tab active">curl</span>
+					</div>
+				</div>
+				<div class="terminal-subhead">
+					<span class="dot"></span>
+					<span>terminal</span>
+				</div>
+				<pre class="terminal-body">
+					<code>				
+						<span class="accent">$</span>
+						<span>{`curl -X POST http://localhost:8080/create`}</span>
+						<span>{"  -H \"Content-Type: application/json\" \\"}</span>
+						<span>{ "  -d '{\"ref\":\"my-app\"}'" }</span>
+						<span class="comment">{ "# Response:" }</span>
+						<span class="comment">{ "# {" }</span>
+						<span class="comment">{ "#   \"status\": \"READY\"," }</span>
+						<span class="comment">{ "#   \"projectId\": \"...\"," }</span>
+						<span class="comment">{ "#   \"connString\": \"postgres://...\"," }</span>
+						<span class="comment">{ "#   \"claimUrl\": \"http://localhost:8080/db/...\", " }</span>
+						<span class="comment">{ "#   \"expiresAt\": \"...\"" }</span>
+						<span class="comment">{ "# }" }</span>
+					</code>
+				</pre>
+			</div>
+		</section>
+
+		if len(databases) == 0 {
+			<div class="empty">
+				<p>No databases running.</p>
+				<p>Click "Create Database" to spin up a fresh PostgreSQL instance.</p>
+			</div>
+		} else {
+			<div class="table-wrap">
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Port</th>
+							<th>Connection String</th>
+							<th>Created</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						for _, db := range databases {
+							<tr>
+								<td>{ db.ID }</td>
+								<td>{ db.ContainerName }</td>
+								<td>{ db.Port }</td>
+								<td><code class="conn-string">{ db.ConnectionString }</code></td>
+								<td>{ db.Created.Format("2006-01-02 15:04") }</td>
+								<td>
+									<form method="POST" action={ templ.SafeURL("/delete/" + db.ID) } style="display:inline;">
+										<button type="submit" class="btn btn-danger" onclick="return confirm('Delete this database?')">Delete</button>
+									</form>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
+	}
+}
