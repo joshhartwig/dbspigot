@@ -14,7 +14,7 @@ templ Index(databases []docker.Database) {
 		<section class="hero">
 			<div>
 				<div class="eyebrow">Self Hosted</div>
-				<h1>Zero configuration Postgres for quick iteration</h1>
+				<h1>Zero configuration instant Postgres</h1>
 				<p>Spin up disposable PostgreSQL instances in seconds.</p>
 				<div class="hero-actions">
 					<form method="POST" action="/create">
@@ -45,7 +45,7 @@ templ Index(databases []docker.Database) {
 <span class="comment"># }</span></code>`)
 			</div>
 		</section>
-
+		
 		if len(databases) == 0 {
 			<div class="empty">
 				<p>No databases running.</p>

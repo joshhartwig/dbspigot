@@ -43,7 +43,7 @@ func Index(databases []docker.Database) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"topbar\"><div class=\"brand\"><div class=\"logo\">db</div><span>spigot</span></div></header><section class=\"hero\"><div><div class=\"eyebrow\">Self Hosted</div><h1>Zero configuration Postgres for quick iteration</h1><p>Spin up disposable PostgreSQL instances in seconds.</p><div class=\"hero-actions\"><form method=\"POST\" action=\"/create\"><button type=\"submit\" class=\"btn btn-primary\">Create Database</button></form></div></div><div class=\"terminal\"><div class=\"terminal-head\"><span class=\"terminal-icon\">›_</span><div class=\"terminal-tabs\"><span class=\"terminal-tab active\">curl</span></div></div><div class=\"terminal-subhead\"><span class=\"dot\"></span> <span>terminal</span></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"topbar\"><div class=\"brand\"><div class=\"logo\">db</div><span>spigot</span></div></header><section class=\"hero\"><div><div class=\"eyebrow\">Self Hosted</div><h1>Zero configuration instant Postgres</h1><p>Spin up disposable PostgreSQL instances in seconds.</p><div class=\"hero-actions\"><form method=\"POST\" action=\"/create\"><button type=\"submit\" class=\"btn btn-primary\">Create Database</button></form></div></div><div class=\"terminal\"><div class=\"terminal-head\"><span class=\"terminal-icon\">›_</span><div class=\"terminal-tabs\"><span class=\"terminal-tab active\">curl</span></div></div><div class=\"terminal-subhead\"><span class=\"dot\"></span> <span>terminal</span></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
