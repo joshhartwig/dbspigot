@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	"dbspigot/internal/docker"
 	"dbspigot/internal/web/views"
@@ -49,7 +50,6 @@ func (h *Handler) SetupRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /", h.basicAuth(h.handleIndex))
 	mux.HandleFunc("POST /create", h.basicAuth(h.handleCreate))
 	mux.HandleFunc("POST /delete/{id}", h.basicAuth(h.handleDelete))
-	mux.HandleFunc("POST /api/v1/database", h.handlerCreateAPI)
 }
 
 func (h *Handler) handleIndex(w http.ResponseWriter, r *http.Request) {
@@ -67,10 +67,15 @@ func (h *Handler) handleIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) handleCreate(w http.ResponseWriter, r *http.Request) {
-	_, err := h.docker.CreateDatabase(context.Background(), h.host)
+	db, err := h.docker.CreateDatabase(context.Background(), h.host)
 	if err != nil {
 		log.Printf("Error creating database: %v", err)
 		http.Error(w, "Failed to create database", http.StatusInternalServerError)
+		return
+	}
+
+	if wantsJSON(r) {
+		writeDatabaseJSON(w, db)
 		return
 	}
 
@@ -101,18 +106,27 @@ func (h *Handler) handleDelete(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (h *Handler) handlerCreateAPI(w http.ResponseWriter, r *http.Request) {
-	db, err := h.docker.CreateDatabase(r.Context(), h.host)
-	if err != nil {
-		w.Header().Set("Content-Type", "application/json")
-		http.Error(w, `{"error":"Failed to create database"}`, http.StatusInternalServerError)
-		return
+func wantsJSON(r *http.Request) bool {
+	accept := r.Header.Get("Accept")
+	if strings.Contains(accept, "application/json") {
+		return true
 	}
+	if r.Header.Get("X-Requested-With") == "fetch" {
+		return true
+	}
+	return false
+}
 
+func writeDatabaseJSON(w http.ResponseWriter, db *docker.Database) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	err = json.NewEncoder(w).Encode(db)
-	if err != nil {
-		http.Error(w, "Failed to delete database", http.StatusInternalServerError)
-	}
+	_ = json.NewEncoder(w).Encode(map[string]string{
+		"id":         db.ID,
+		"name":       db.ContainerName,
+		"port":       db.Port,
+		"connection": db.ConnectionString,
+		"created":    db.Created.Format(time.RFC3339),
+		"username":   db.User,
+		"password":   db.Password,
+	})
 }
