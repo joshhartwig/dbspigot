@@ -4,6 +4,8 @@ A while back I was introducted to Instagres, which is a part of Neon's offerings
 
 Enter DBSpigot
 
+![DBSpigot Screenshot](dbspigot.png)
+
 DBSpigot is a Go-based web application that serves up connection strings. Behind the scenes it leverages the Docker SDK to spin up an new Postgres container and returns the connection string. You must have Docker Engine 1.24 or newer. You can run `docker version` to view the version.
 
 ## Security
