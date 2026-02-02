@@ -3,7 +3,7 @@ package views
 import "dbspigot/internal/docker"
 
 templ Index(databases []docker.Database) {
-	@Base("DBSpigot") {
+	@Base("[DB]spigot") {
 		<header class="topbar">
 			<div class="brand">
 				<div class="logo">db</div>
@@ -33,15 +33,18 @@ templ Index(databases []docker.Database) {
 					<span class="dot"></span>
 					<span>terminal</span>
 				</div>
-				<pre class="terminal-body"><span class="accent">$</span> curl -X POST http://localhost:8080/create
+				@templ.Raw(`<code class="terminal-body"><span class="accent">$</span> curl -X POST http://localhost:8080/create \
+  -H "Content-Type: application/json" \
+  -d '{"ref": "my-app"}'
 
 <span class="comment"># Response:</span>
-<span class="comment"># &#123;</span>
+<span class="comment"># {</span>
 <span class="comment">#   "status": "READY",</span>
 <span class="comment">#   "projectId": "...",</span>
-<span class="comment">#   "connString": "postgres://...",</span>
+<span class="comment">#   "connString": "postgresql://...",</span>
+<span class="comment">#   "claimUrl": "http://localhost:8080/db/...",</span>
 <span class="comment">#   "expiresAt": "..."</span>
-<span class="comment"># &#125;</span></pre>
+<span class="comment"># }</span></code>`)
 			</div>
 		</section>
 

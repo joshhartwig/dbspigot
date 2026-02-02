@@ -2,6 +2,7 @@ package web
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"net/http"
 	"strings"
@@ -11,10 +12,10 @@ import (
 )
 
 type Handler struct {
-	docker   *docker.Client
-	username string
-	password string
-	host     string
+	docker    *docker.Client
+	username  string
+	password  string
+	host      string
 	localAuth bool
 }
 
@@ -48,6 +49,7 @@ func (h *Handler) SetupRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("GET /", h.basicAuth(h.handleIndex))
 	mux.HandleFunc("POST /create", h.basicAuth(h.handleCreate))
 	mux.HandleFunc("POST /delete/{id}", h.basicAuth(h.handleDelete))
+	mux.HandleFunc("POST /api/v1/database", h.handlerCreateAPI)
 }
 
 func (h *Handler) handleIndex(w http.ResponseWriter, r *http.Request) {
@@ -97,4 +99,20 @@ func (h *Handler) handleDelete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func (h *Handler) handlerCreateAPI(w http.ResponseWriter, r *http.Request) {
+	db, err := h.docker.CreateDatabase(r.Context(), h.host)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		http.Error(w, `{"error":"Failed to create database"}`, http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	err = json.NewEncoder(w).Encode(db)
+	if err != nil {
+		http.Error(w, "Failed to delete database", http.StatusInternalServerError)
+	}
 }

@@ -46,7 +46,7 @@ func main() {
 	handler.SetupRoutes(mux)
 
 	addr := ":" + port
-	log.Printf("Starting DBSpigot on %s", addr)
+	log.Printf("Starting DBSpigot Server on %s", addr)
 	if err := http.ListenAndServe(addr, mux); err != nil {
 		log.Fatalf("Server failed: %v", err)
 	}

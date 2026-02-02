@@ -43,44 +43,50 @@ func Index(databases []docker.Database) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"topbar\"><div class=\"brand\"><div class=\"logo\">db</div><span>spigot</span></div></header><section class=\"hero\"><div><div class=\"eyebrow\">Self Hosted Instant Postgres</div><h1>Zero-config Postgres for quick iteration</h1><p>Spin up disposable PostgreSQL instances in seconds.</p><div class=\"hero-actions\"><form method=\"POST\" action=\"/create\"><button type=\"submit\" class=\"btn btn-primary\">Create Database</button></form></div></div><div class=\"terminal\"><div class=\"terminal-head\"><span class=\"terminal-icon\">›_</span><div class=\"terminal-tabs\"><span class=\"terminal-tab active\">curl</span></div></div><div class=\"terminal-subhead\"><span class=\"dot\"></span> <span>terminal</span></div><pre class=\"terminal-body\"><span class=\"accent\">$</span> curl -X POST http://localhost:8080/create <span class=\"comment\"># Response:</span> <span class=\"comment\"># &#123;</span> <span class=\"comment\">#   \"status\": \"READY\",</span> <span class=\"comment\">#   \"projectId\": \"...\",</span> <span class=\"comment\">#   \"connString\": \"postgres://...\",</span> <span class=\"comment\">#   \"expiresAt\": \"...\"</span> <span class=\"comment\"># &#125;</span></pre></div></section>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"topbar\"><div class=\"brand\"><div class=\"logo\">db</div><span>spigot</span></div></header><section class=\"hero\"><div><div class=\"eyebrow\">Self Hosted</div><h1>Zero configuration Postgres for quick iteration</h1><p>Spin up disposable PostgreSQL instances in seconds.</p><div class=\"hero-actions\"><form method=\"POST\" action=\"/create\"><button type=\"submit\" class=\"btn btn-primary\">Create Database</button></form></div></div><div class=\"terminal\"><div class=\"terminal-head\"><span class=\"terminal-icon\">›_</span><div class=\"terminal-tabs\"><span class=\"terminal-tab active\">curl</span></div></div><div class=\"terminal-subhead\"><span class=\"dot\"></span> <span>terminal</span></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templ.Raw(`<code class="terminal-body"><span class="accent">$</span> curl -X POST http://localhost:8080/create \
+  -H "Content-Type: application/json" \
+  -d '{"ref": "my-app"}'
+
+<span class="comment"># Response:</span>
+<span class="comment"># {</span>
+<span class="comment">#   "status": "READY",</span>
+<span class="comment">#   "projectId": "...",</span>
+<span class="comment">#   "connString": "postgresql://...",</span>
+<span class="comment">#   "claimUrl": "http://localhost:8080/db/...",</span>
+<span class="comment">#   "expiresAt": "..."</span>
+<span class="comment"># }</span></code>`).Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></section>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if len(databases) == 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"empty\"><p>No databases running.</p><p>Click \"Create Database\" to spin up a fresh PostgreSQL instance.</p></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"empty\"><p>No databases running.</p><p>Click \"Create Database\" to spin up a fresh PostgreSQL instance.</p></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<div class=\"table-wrap\"><table><thead><tr><th>ID</th><th>Name</th><th>Port</th><th>Connection String</th><th>Created</th><th></th></tr></thead> <tbody>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<div class=\"table-wrap\"><table><thead><tr><th>ID</th><th>Name</th><th>Port</th><th>Connection String</th><th>Created</th><th></th></tr></thead> <tbody>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				for _, db := range databases {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<tr><td>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "<tr><td>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var3 string
 					templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(db.ID)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 69, Col: 19}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 72, Col: 19}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</td><td>")
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					var templ_7745c5c3_Var4 string
-					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(db.ContainerName)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 70, Col: 30}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
@@ -88,67 +94,80 @@ func Index(databases []docker.Database) templ.Component {
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
+					var templ_7745c5c3_Var4 string
+					templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(db.ContainerName)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 73, Col: 30}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</td><td>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
 					var templ_7745c5c3_Var5 string
 					templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(db.Port)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 71, Col: 21}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 74, Col: 21}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</td><td><code class=\"conn-string\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</td><td><code class=\"conn-string\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var6 string
 					templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(db.ConnectionString)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 72, Col: 59}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 75, Col: 59}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 8, "</code></td><td>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</code></td><td>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var7 string
 					templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(db.Created.Format("2006-01-02 15:04"))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 73, Col: 51}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 76, Col: 51}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</td><td><form method=\"POST\" action=\"")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "</td><td><form method=\"POST\" action=\"")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 					var templ_7745c5c3_Var8 templ.SafeURL
 					templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(templ.SafeURL("/delete/" + db.ID))
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 75, Col: 71}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/web/views/index.templ`, Line: 78, Col: 71}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 10, "\" style=\"display:inline;\"><button type=\"submit\" class=\"btn btn-danger\" onclick=\"return confirm('Delete this database?')\">Delete</button></form></td></tr>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "\" style=\"display:inline;\"><button type=\"submit\" class=\"btn btn-danger\" onclick=\"return confirm('Delete this database?')\">Delete</button></form></td></tr>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</tbody></table></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 12, "</tbody></table></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Base("DBSpigot").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Base("[DB]spigot").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
