@@ -32,7 +32,7 @@ func NewHandler(dockerClient *docker.Client, username, password, host string, lo
 
 func (h *Handler) basicAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if h.localAuth {
+		if !h.localAuth {
 			next(w, r)
 			return
 		}
