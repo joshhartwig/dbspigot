@@ -15,19 +15,25 @@ type Handler struct {
 	username string
 	password string
 	host     string
+	localAuth bool
 }
 
-func NewHandler(dockerClient *docker.Client, username, password, host string) *Handler {
+func NewHandler(dockerClient *docker.Client, username, password, host string, localAuth bool) *Handler {
 	return &Handler{
-		docker:   dockerClient,
-		username: username,
-		password: password,
-		host:     host,
+		docker:    dockerClient,
+		username:  username,
+		password:  password,
+		host:      host,
+		localAuth: localAuth,
 	}
 }
 
 func (h *Handler) basicAuth(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		if h.localAuth {
+			next(w, r)
+			return
+		}
 		user, pass, ok := r.BasicAuth()
 		if !ok || user != h.username || pass != h.password {
 			w.Header().Set("WWW-Authenticate", `Basic realm="DBSpigot"`)

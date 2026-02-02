@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"dbspigot/internal/docker"
 	"dbspigot/internal/web"
@@ -15,8 +16,12 @@ func main() {
 	password := os.Getenv("DBSPIGOT_PASS")
 	host := os.Getenv("DBSPIGOT_HOST")
 	port := os.Getenv("DBSPIGOT_PORT")
+	localAuth, err := strconv.ParseBool(os.Getenv("DBSPIGOT_LOCAL_AUTH"))
+	if err != nil {
+		localAuth = false
+	}
 
-	if username == "" || password == "" {
+	if !localAuth && (username == "" || password == "") {
 		log.Fatal("DBSPIGOT_USER and DBSPIGOT_PASS environment variables are required")
 	}
 
@@ -36,7 +41,7 @@ func main() {
 	defer dockerClient.Close()
 
 	// Set up HTTP server
-	handler := web.NewHandler(dockerClient, username, password, host)
+	handler := web.NewHandler(dockerClient, username, password, host, localAuth)
 	mux := http.NewServeMux()
 	handler.SetupRoutes(mux)
 
